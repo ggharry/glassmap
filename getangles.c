@@ -74,7 +74,7 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 		   (magField[0] * cos(pitchAngle)) + (magField[1] * sin(pitchAngle) * sin(rollAngle)) + (magField[2] * sin(pitchAngle) * cos(rollAngle))
 			);
 
-		double angles[] = {rollAngle*180/M_PI, pitchAngle*180/M_PI, yawAngle*180/M_PI};
+		double angles[] = {rollAngle*180/M_PI, pitchAngle*180/M_PI, yawAngle*180/M_PI*2+90};
 
 		printf("Roll: %6f, Pitch: %6f, Yaw: %6f", angles[0], angles[1], angles[2]);
 
