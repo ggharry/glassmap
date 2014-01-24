@@ -14,6 +14,7 @@
 
 using namespace std;
 
+float _angle = 0.0f;
 
 void handleKeypress(unsigned char key, int x, int y);
 void handleResize(int w, int h);

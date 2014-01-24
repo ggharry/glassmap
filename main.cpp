@@ -2,7 +2,6 @@
 #include "compass.cpp"
 
 float DISPLAY_INTERVAL = 40;
-float _angle = 0.0f;
 
 //Called when a key is pressed
 void handleKeypress(unsigned char key, int x, int y) {
@@ -43,12 +42,12 @@ void drawScene() {
 	
 	//Triangle
 	glVertex3f(0.3f, -0.5f, -3.0f);
-	glVertex3f(0.0f, 0.5f, -3.0f);
+	glVertex3f(0.0f, 0.5f, -2.85f);
 	glVertex3f(-0.3f, -0.5f, -3.0f);
 
 	//Triangle
 	glVertex3f(0.3f, -0.5f, -2.7f);
-	glVertex3f(0.0f, 0.5f, -2.7f);
+	glVertex3f(0.0f, 0.5f, -2.85f);
 	glVertex3f(-0.3f, -0.5f, -2.7f);
 	
 	glEnd();
