@@ -5,9 +5,12 @@
 #include <math.h>
 
 #ifdef __APPLE__
-#include <OpenGL/OpenGL.h>
+#include <OPENGL/gl.h>
+#include <OPENGL/glu.h>
 #include <GLUT/glut.h>
 #else
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
 #endif
 
