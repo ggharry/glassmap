@@ -1,15 +1,4 @@
-// - Spatial simple -
-// This simple example creates an spatial handle, initializes it, hooks the event handlers and opens it.  It then waits
-// for a spatial to be attached and waits for events to be fired. We preset the data rate to 16ms, but can be set higher (eg. 200)
-// in order to slow down the events to make them more visible.
-//
-// Copyright 2010 Phidgets Inc.  All rights reserved.
-// This work is licensed under the Creative Commons Attribution 2.5 Canada License. 
-// view a copy of this license, visit http://creativecommons.org/licenses/by/2.5/ca/
-
-#include <stdio.h>
-#include <phidget21.h>
-#include <math.h>
+#include "compass.h"
 
 //callback that will run if the Spatial is attached to the computer
 int CCONV AttachHandler(CPhidgetHandle spatial, void *userptr)
@@ -38,9 +27,6 @@ int CCONV ErrorHandler(CPhidgetHandle spatial, void *userptr, int ErrorCode, con
 	return 0;
 }
 
-//callback that will run at datarate
-//data - array of spatial event data structures that holds the spatial data packets that were sent in this event
-//count - the number of spatial data event packets included in this event
 int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count)
 {	
 
@@ -48,12 +34,6 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 	printf("Number of Data Packets in this event: %d\n", count);
 	for(i = 0; i < count; i++)
 	{
-		// printf("=== Data Set: %d ===\n", i);
-		// printf("Acceleration> x: %6f  y: %6f  x: %6f\n", data[i]->acceleration[0], data[i]->acceleration[1], data[i]->acceleration[2]);
-		// printf("Angular Rate> x: %6f  y: %6f  x: %6f\n", data[i]->angularRate[0], data[i]->angularRate[1], data[i]->angularRate[2]);
-		// printf("Magnetic Field> x: %6f  y: %6f  x: %6f\n", data[i]->magneticField[0], data[i]->magneticField[1], data[i]->magneticField[2]);
-		// printf("Timestamp> seconds: %d -- microseconds: %d\n", data[i]->timestamp.seconds, data[i]->timestamp.microseconds);
-	
 		double gravity[] = {
 		data[i]->acceleration[0],
 		data[i]->acceleration[1],
@@ -81,8 +61,12 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 		}
 
 		printf("Roll: %6f, Pitch: %6f, Yaw: %6f", angles[0], angles[1], angles[2]);
+		
+		_angle = angles[2];
 
 	}
+
+	
 
 	printf("---------------------------------------------\n");
 
@@ -159,8 +143,8 @@ int spatial_simple()
 	printf("Reading.....\n");
 	
 	//Set the data rate for the spatial events
-	CPhidgetSpatial_setDataRate(spatial, 16);
-
+	CPhidgetSpatial_setDataRate(spatial, 5);
+/*
 	//run until user input is read
 	printf("Press any key to end\n");
 	getchar();
@@ -169,15 +153,9 @@ int spatial_simple()
 	printf("Closing...\n");
 	CPhidget_close((CPhidgetHandle)spatial);
 	CPhidget_delete((CPhidgetHandle)spatial);
-
+*/
 	return 0;
 }
 
-//main entry point to the program
-int main(int argc, char* argv[])
-{
-	//all done, exit
-	spatial_simple();
-	return 0;
-}
+
 
