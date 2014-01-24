@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <phidget21.h>
-#include "main.h"
 #include <math.h>
 
 #ifdef __APPLE__
