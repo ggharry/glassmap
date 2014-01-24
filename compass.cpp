@@ -1,5 +1,7 @@
 #include "compass.h"
 
+int READ_COMPASS_INTERVAL = 40;
+
 //callback that will run if the Spatial is attached to the computer
 int CCONV AttachHandler(CPhidgetHandle spatial, void *userptr)
 {
@@ -62,6 +64,7 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 
 		printf("Roll: %6f, Pitch: %6f, Yaw: %6f", angles[0], angles[1], angles[2]);
 		
+		// Set the global variable
 		_angle = angles[2];
 
 	}
@@ -143,17 +146,8 @@ int spatial_simple()
 	printf("Reading.....\n");
 	
 	//Set the data rate for the spatial events
-	CPhidgetSpatial_setDataRate(spatial, 5);
-/*
-	//run until user input is read
-	printf("Press any key to end\n");
-	getchar();
+	CPhidgetSpatial_setDataRate(spatial, READ_COMPASS_INTERVAL);
 
-	//since user input has been read, this is a signal to terminate the program so we will close the phidget and delete the object we created
-	printf("Closing...\n");
-	CPhidget_close((CPhidgetHandle)spatial);
-	CPhidget_delete((CPhidgetHandle)spatial);
-*/
 	return 0;
 }
 

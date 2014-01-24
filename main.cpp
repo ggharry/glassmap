@@ -1,6 +1,9 @@
 #include "main.h"
 #include "compass.cpp"
 
+float DISPLAY_INTERVAL = 40;
+float _angle = 0.0f;
+
 //Called when a key is pressed
 void handleKeypress(unsigned char key, int x, int y) {
 	switch (key) {
@@ -31,15 +34,22 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
 	glLoadIdentity(); //Reset the drawing perspective
 
-	glRotatef(10, 1.0f, 0.0f, 0.0f);
+	glRotatef(25, 1.0f, 0.0f, 0.0f);
 	glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
+
+	glTranslatef(0.0f, 0.0f, -2.0f);
 
 	glBegin(GL_TRIANGLES);
 	
 	//Triangle
-	glVertex3f(0.5f, -0.8f, -3.0f);
-	glVertex3f(0.0f, 0.8f, -3.0f);
-	glVertex3f(-0.5f, -0.8f, -3.0f);
+	glVertex3f(0.3f, -0.5f, -3.0f);
+	glVertex3f(0.0f, 0.5f, -3.0f);
+	glVertex3f(-0.3f, -0.5f, -3.0f);
+
+	//Triangle
+	glVertex3f(0.3f, -0.5f, -2.7f);
+	glVertex3f(0.0f, 0.5f, -2.7f);
+	glVertex3f(-0.3f, -0.5f, -2.7f);
 	
 	glEnd();
 	
@@ -49,11 +59,10 @@ void drawScene() {
 
 
 void update(int value) {
-	//_angle += 30.0f;
 	glutPostRedisplay(); //Tell GLUT that the display has changed
 	
 	//Tell GLUT to call update again in 25 milliseconds
-	glutTimerFunc(5, update, 0);
+	glutTimerFunc(DISPLAY_INTERVAL, update, 0);
 }
 
 
@@ -73,7 +82,7 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(handleKeypress);
 	glutReshapeFunc(handleResize);
 
-	glutTimerFunc(25, update, 0); //Add a timer
+	glutTimerFunc(DISPLAY_INTERVAL, update, 0); //Add a timer
 
 	spatial_simple();	
 	
