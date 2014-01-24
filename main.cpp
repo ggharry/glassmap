@@ -33,10 +33,7 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
 	glLoadIdentity(); //Reset the drawing perspective
 
-	glRotatef(25, 1.0f, 0.0f, 0.0f);
 	glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
-
-	glTranslatef(0.0f, 0.0f, -2.0f);
 
 	glBegin(GL_TRIANGLES);
 	
