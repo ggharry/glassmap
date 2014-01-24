@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <phidget21.h>
 #include "main.h"
+#include <math.h>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -44,8 +45,8 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
 	glLoadIdentity(); //Reset the drawing perspective
 
-	
-	glRotatef(_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
+	glRotatef(10, 1.0f, 0.0f, 0.0f);
+	glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
 
 	glBegin(GL_TRIANGLES);
 	
@@ -66,7 +67,7 @@ void update(int value) {
 	glutPostRedisplay(); //Tell GLUT that the display has changed
 	
 	//Tell GLUT to call update again in 25 milliseconds
-	glutTimerFunc(25, update, 0);
+	glutTimerFunc(5, update, 0);
 }
 
 
@@ -98,25 +99,55 @@ int CCONV ErrorHandler(CPhidgetHandle spatial, void *userptr, int ErrorCode, con
 	return 0;
 }
 
-//callback that will run at datarate
-//data - array of spatial event data structures that holds the spatial data packets that were sent in this event
-//count - the number of spatial data event packets included in this event
 int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhidgetSpatial_SpatialEventDataHandle *data, int count)
-{
+{	
+
 	int i;
-	//printf("Number of Data Packets in this event: %d\n", count);
+	printf("Number of Data Packets in this event: %d\n", count);
 	for(i = 0; i < count; i++)
 	{
-		//printf("=== Data Set: %d ===\n", i);
-		//printf("Acceleration> x: %6f  y: %6f  x: %6f\n", data[i]->acceleration[0], data[i]->acceleration[1], data[i]->acceleration[2]);
-		//printf("Angular Rate> x: %6f  y: %6f  x: %6f\n", data[i]->angularRate[0], data[i]->angularRate[1], data[i]->angularRate[2]);
-		//printf("Magnetic Field> x: %6f  y: %6f  x: %6f\n", data[i]->magneticField[0], data[i]->magneticField[1], data[i]->magneticField[2]);
-		//printf("Timestamp> seconds: %d -- microseconds: %d\n", data[i]->timestamp.seconds, data[i]->timestamp.microseconds);
+		// printf("=== Data Set: %d ===\n", i);
+		// printf("Acceleration> x: %6f  y: %6f  x: %6f\n", data[i]->acceleration[0], data[i]->acceleration[1], data[i]->acceleration[2]);
+		// printf("Angular Rate> x: %6f  y: %6f  x: %6f\n", data[i]->angularRate[0], data[i]->angularRate[1], data[i]->angularRate[2]);
+		// printf("Magnetic Field> x: %6f  y: %6f  x: %6f\n", data[i]->magneticField[0], data[i]->magneticField[1], data[i]->magneticField[2]);
+		// printf("Timestamp> seconds: %d -- microseconds: %d\n", data[i]->timestamp.seconds, data[i]->timestamp.microseconds);
+	
+		double gravity[] = {
+		data[i]->acceleration[0],
+		data[i]->acceleration[1],
+		data[i]->acceleration[2]
+		};
+
+		double magField[] = {
+		data[i]->magneticField[0], 
+		data[i]->magneticField[1], 
+		data[i]->magneticField[2]};
+
+		double rollAngle = atan2(gravity[1], gravity[2]);
+
+		double pitchAngle = atan(-gravity[0] / ((gravity[1] * sin(rollAngle)) + (gravity[2] * cos(rollAngle))));
+
+		double yawAngle = atan2(
+		   (magField[2] * sin(rollAngle))- (magField[1] * cos(rollAngle)),
+		   (magField[0] * cos(pitchAngle)) + (magField[1] * sin(pitchAngle) * sin(rollAngle)) + (magField[2] * sin(pitchAngle) * cos(rollAngle))
+			);
+
+		double angles[] = {rollAngle*180/M_PI, pitchAngle*180/M_PI, yawAngle*180/M_PI};
+
+		if (angles[2] < 0){
+			angles[2] = 360-(angles[2] * -1);
+		}
+
+		printf("Roll: %6f, Pitch: %6f, Yaw: %6f", angles[0], angles[1], angles[2]);
+		
+		_angle = angles[2];
+
 	}
 
-	//printf("---------------------------------------------\n");
+	
 
-	_angle = data[0]->magneticField[0] * 60;
+	printf("---------------------------------------------\n");
+
 	return 0;
 }
 
@@ -190,7 +221,7 @@ int spatial_simple()
 	printf("Reading.....\n");
 	
 	//Set the data rate for the spatial events
-	CPhidgetSpatial_setDataRate(spatial, 16);
+	CPhidgetSpatial_setDataRate(spatial, 5);
 /*
 	//run until user input is read
 	printf("Press any key to end\n");
