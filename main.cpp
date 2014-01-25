@@ -1,7 +1,7 @@
 #include "main.h"
 #include "compass.cpp"
 
-float DISPLAY_INTERVAL = 40;
+float DISPLAY_INTERVAL = 100;
 
 //Called when a key is pressed
 void handleKeypress(unsigned char key, int x, int y) {
@@ -24,7 +24,18 @@ void handleResize(int w, int h) {
 	gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-float _cameraAngle = 0.0f;
+void plotPoint(Coord point, Coord offset) {
+	glVertex3f(point.x + offset.x, point.y + offset.y, point.z + offset.z);
+}
+
+Coord rotateAlongY(Coord point, float angle) {
+	angle = angle * M_PI / 180;
+	Coord result;
+	result.y = point.y;
+	result.z = point.z * cos(angle) + point.x * sin(angle);
+	result.x = point.x * cos(angle) - point.z * sin(angle);
+	return result;
+}
 
 //Draws the 3D scene
 void drawScene() {
@@ -33,21 +44,44 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
 	glLoadIdentity(); //Reset the drawing perspective
 
-	glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
+	//glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
 
-	glBegin(GL_TRIANGLES);
+	Coord head = rotateAlongY(_head, _angle);
+	Coord tail1 = rotateAlongY(_tail1, _angle);
+	Coord tail2 = rotateAlongY(_tail2, _angle);
+	Coord tail3 = rotateAlongY(_tail3, _angle);
+	Coord tail4 = rotateAlongY(_tail4, _angle);
+	Coord offset = _offset;
+
+	glBegin(GL_TRIANGLES); // Four sides
 	
 	//Triangle
-	glVertex3f(0.3f, -0.5f, -3.0f);
-	glVertex3f(0.0f, 0.5f, -2.85f);
-	glVertex3f(-0.3f, -0.5f, -3.0f);
+	plotPoint(head, offset);
+	plotPoint(tail1, offset);
+	plotPoint(tail3, offset);
 
-	//Triangle
-	glVertex3f(0.3f, -0.5f, -2.7f);
-	glVertex3f(0.0f, 0.5f, -2.85f);
-	glVertex3f(-0.3f, -0.5f, -2.7f);
-	
+	plotPoint(head, offset);
+	plotPoint(tail1, offset);
+	plotPoint(tail2, offset);
+
+	plotPoint(head, offset);
+	plotPoint(tail2, offset);
+	plotPoint(tail4, offset);
+
+	plotPoint(head, offset);
+	plotPoint(tail3, offset);
+	plotPoint(tail4, offset);  
+
 	glEnd();
+
+   	glBegin(GL_QUADS); // Bottom face
+    
+	plotPoint(tail1, offset);
+	plotPoint(tail2, offset);  
+	plotPoint(tail3, offset);
+	plotPoint(tail4, offset);  
+    
+	glEnd(); 
 	
 	glutSwapBuffers();
 }

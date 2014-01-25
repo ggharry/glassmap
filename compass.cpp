@@ -1,6 +1,6 @@
 #include "compass.h"
 
-int READ_COMPASS_INTERVAL = 40;
+int READ_COMPASS_INTERVAL = 200;
 
 //callback that will run if the Spatial is attached to the computer
 int CCONV AttachHandler(CPhidgetHandle spatial, void *userptr)
@@ -66,7 +66,7 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 		
 		// Set the global variable
 		_angle = angles[2];
-
+		
 	}
 
 	

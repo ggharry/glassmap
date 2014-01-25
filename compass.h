@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <phidget21.h>
-#include <math.h>
+
 
 int CCONV AttachHandler(CPhidgetHandle spatial, void *userptr);
 int CCONV DetachHandler(CPhidgetHandle spatial, void *userptr);
