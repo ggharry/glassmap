@@ -28,6 +28,16 @@ void plotPoint(Coord point, Coord offset) {
 	glVertex3f(point.x + offset.x, point.y + offset.y, point.z + offset.z);
 }
 
+
+/*
+ * We rotate the point clockwise by angle in the following plane
+ * ------->x
+ * |
+ * |
+ * |
+ * |
+ * z
+ */
 Coord rotateAlongY(Coord point, float angle) {
 	angle = angle * M_PI / 180;
 	Coord result;
