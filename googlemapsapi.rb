@@ -24,7 +24,7 @@ puts rise = end_location["lat"] - start_location["lat"]
 
 puts run = end_location["lng"] - start_location["lng"]
 
-angle_change_from_north = Math.atan2(rise, run)*180/3.1415
+angle_change_from_north = Math.atan2(rise, run)*180/Math::PI
 
 if angle_change_from_north < 0 
 	angle_change_from_north += 360
