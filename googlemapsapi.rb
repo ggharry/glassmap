@@ -20,9 +20,10 @@ start_location = doc["routes"][0]["legs"][0]["steps"][0]["start_location"]
 end_location = doc["routes"][0]["legs"][0]["steps"][0]["end_location"]
 
 # calculate angle from rise/run information to generate a direction for arrow to point
+# the angle starts from true north, and counter-clockwise
 puts rise = end_location["lat"] - start_location["lat"]
 puts run = end_location["lng"] - start_location["lng"]
-angle_change_from_north = Math.atan2(rise, run)*180/Math::PI
+angle_change_from_north = Math.atan2(rise, run)*180/Math::PI - 90
 if angle_change_from_north < 0 
 	angle_change_from_north += 360
 end
