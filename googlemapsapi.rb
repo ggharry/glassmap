@@ -31,3 +31,9 @@ if angle_change_from_north < 0
 end
 
 puts angle_change_from_north
+
+output = File.open( "lng_lat_coordinates.txt", "w")
+
+output << angle_change_from_north
+
+output.close
