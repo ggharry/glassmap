@@ -1,7 +1,6 @@
 #include "main.h"
 #include "compass.cpp"
-
-float DISPLAY_INTERVAL = 100;
+#include "gps.cpp"
 
 //Called when a key is pressed
 void handleKeypress(unsigned char key, int x, int y) {
@@ -47,6 +46,16 @@ Coord rotateAlongY(Coord point, float angle) {
 	return result;
 }
 
+/* 
+ * Given the destination angle (clockwise to North) and the current angle
+ * (clockwise to North), find the angle of destination relative to
+ * the current angle (clockwise)
+ */
+float dest_relative_to_current(float dest, float current) {
+	return 0.0f;
+	
+}
+
 //Draws the 3D scene
 void drawScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -54,13 +63,14 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
 	glLoadIdentity(); //Reset the drawing perspective
 
-	//glRotatef(-_angle, 0.0f, 0.0f, 1.0f); //Rotate about the z-axis
-
-	Coord head = rotateAlongY(_head, _angle);
-	Coord tail1 = rotateAlongY(_tail1, _angle);
-	Coord tail2 = rotateAlongY(_tail2, _angle);
-	Coord tail3 = rotateAlongY(_tail3, _angle);
-	Coord tail4 = rotateAlongY(_tail4, _angle);
+	_destination_angle = read_direction(_DIRECTION_FILE);
+	_dest_to_current_angle = dest_relative_to_current(_destination_angle, _current_angle);
+	
+	Coord head = rotateAlongY(_head, _dest_to_current_angle);
+	Coord tail1 = rotateAlongY(_tail1, _dest_to_current_angle);
+	Coord tail2 = rotateAlongY(_tail2, _dest_to_current_angle);
+	Coord tail3 = rotateAlongY(_tail3, _dest_to_current_angle);
+	Coord tail4 = rotateAlongY(_tail4, _dest_to_current_angle);
 	Coord offset = _offset;
 
 	glBegin(GL_TRIANGLES); // Four sides
@@ -101,7 +111,7 @@ void drawScene() {
 void update(int value) {
 	glutPostRedisplay(); //Tell GLUT that the display has changed
 	
-	//Tell GLUT to call update again in 25 milliseconds
+	//Tell GLUT to call update again in DISPLAY_INTERVAL milliseconds
 	glutTimerFunc(DISPLAY_INTERVAL, update, 0);
 }
 
