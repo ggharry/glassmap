@@ -52,7 +52,7 @@ Coord rotateAlongY(Coord point, float angle) {
  * the current angle (clockwise)
  */
 float dest_relative_to_current(float dest, float current) {
-	return 360.0f - dest - current;
+	return 360 - dest - current;
 	
 }
 
@@ -65,6 +65,8 @@ void drawScene() {
 
 	_destination_angle = read_direction(_DIRECTION_FILE);
 	_dest_to_current_angle = dest_relative_to_current(_destination_angle, _current_angle);
+	printf("Curr: %6f  Dest: %6f  Dest to curr: %6f ", _current_angle, _destination_angle, _dest_to_current_angle);
+
 	
 	Coord head = rotateAlongY(_head, _dest_to_current_angle);
 	Coord tail1 = rotateAlongY(_tail1, _dest_to_current_angle);
