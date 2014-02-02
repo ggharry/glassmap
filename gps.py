@@ -4,11 +4,21 @@ import math
 import time
 
 
-_FILENAME = "lng_lat_coordinates.txt"
+_CURRENT_LOCATION_FILE = "current_location.txt"
+_DIRECTION_FILE = "directions.txt"
 _PERIOD = 5
 
 
+def fetch_current_location(filename):
+    """Assuming that the current lat and long data are stored in a file with name filename, return the data as a tuple"""
+    # To modify this when Arduino works
+    lat = 0
+    lng = 0
+    return (lat, lng)
+
+
 def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
+    """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
 
     # do http get request from google maps api
     url = "http://maps.googleapis.com/maps/api/directions/json?origin=205%20887%20Bay%20St%20Toronto&destination=Sandford%20Fleming%20Bldg,%20Toronto,%20ON%20M5S%203G4&sensor=true&mode=walking"
@@ -46,9 +56,10 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
 
 
 def main():
-    ctr = 100
+    ctr = 100 # don't want the while loop to continue forever
     while (ctr > 0):
-        fetch_direction(0, 0, 0, 0, _FILENAME)
+	(start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
+        fetch_direction(start_lat, start_lng, 0, 0, _DIRECTION_FILE)
         time.sleep(_PERIOD)
         ctr -= 1
 
