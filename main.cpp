@@ -52,7 +52,7 @@ Coord rotateAlongY(Coord point, float angle) {
  * the current angle (clockwise)
  */
 float dest_relative_to_current(float dest, float current) {
-	return 0.0f;
+	return 360.0f - dest - current;
 	
 }
 
