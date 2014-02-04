@@ -13,7 +13,7 @@ doc = JSON.parse(doc)
 origin_address = doc["routes"][0]["legs"][0]["start_address"]
 origin_location = doc["routes"][0]["legs"][0]["start_location"]
 final_address = doc["routes"][0]["legs"][0]["end_address"]
-final_location = doc["routes"][0]["legs"][0]["end_location"]
+puts final_location = doc["routes"][0]["legs"][0]["end_location"]
 
 # find out the immediate location information
 start_location = doc["routes"][0]["legs"][0]["steps"][0]["start_location"]
