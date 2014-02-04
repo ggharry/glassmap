@@ -2,26 +2,52 @@ import urllib2
 import json
 import math
 import time
+import re
 
 
 _CURRENT_LOCATION_FILE = "current_location.txt"
 _DIRECTION_FILE = "directions.txt"
 _PERIOD = 5
+_MIN_IN_DEG = 60.0
 
+
+def GPS_reading_to_degree_format(integer_reading, decimal_reading, direction):
+    decimal_reading = "." + decimal_reading
+    integer_degree = float(integer_reading[:-2])
+    decimal_degree = (float(integer_reading[-2:]) + float(decimal_reading)) / _MIN_IN_DEG
+    result = integer_degree + decimal_degree
+	
+    if direction == "S" or direction == "W":
+        result *= -1.0
+
+    return result
 
 def fetch_current_location(filename):
     """Assuming that the current lat and long data are stored in a file with name filename, return the data as a tuple"""
-    # To modify this when Arduino works
     lat = 0
     lng = 0
+
+    f = open(filename, 'r')
+    data = f.read()
+    pattern = "\$GPGGA,[^,]*,([^,]*),([^,]*),([^,]*),([^,]*),"
+
+    match = re.search(pattern, data)
+    print match.group()
+
+    f.close()
     return (lat, lng)
 
 
 def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
 
+    start_lat = 43.6626562
+    start_lng = -79.3864334
+    end_lat = 43.6597456
+    end_lng = -79.39520809999999
+
     # do http get request from google maps api
-    url = "http://maps.googleapis.com/maps/api/directions/json?origin=205%20887%20Bay%20St%20Toronto&destination=Sandford%20Fleming%20Bldg,%20Toronto,%20ON%20M5S%203G4&sensor=true&mode=walking"
+    url = "http://maps.googleapis.com/maps/api/directions/json?origin={},{}&destination={},{}&sensor=false&mode=walking".format(start_lat, start_lng, end_lat, end_lng)
 
     # simple parsing json
     response = urllib2.urlopen(url)
@@ -56,16 +82,19 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
 
 
 def main():
+    # Hard coded final destination - Sanford Fleming Building
+    end_lat = 43.6597456
+    end_lng = -79.39520809999999
     ctr = 100 # don't want the while loop to continue forever
     while (ctr > 0):
-	(start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
-        fetch_direction(start_lat, start_lng, 0, 0, _DIRECTION_FILE)
+        (start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
+        fetch_direction(start_lat, start_lng, end_lat, end_lng, _DIRECTION_FILE)
         time.sleep(_PERIOD)
         ctr -= 1
 
 
 if __name__ == "__main__":
     main()
-    print "lol"
+    print "Python main() completed"
 
 
