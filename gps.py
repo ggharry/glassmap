@@ -3,7 +3,7 @@ import json
 import math
 import time
 import re
-
+import serial
 
 _CURRENT_LOCATION_FILE = "current_location.txt"
 _DIRECTION_FILE = "directions.txt"
@@ -24,27 +24,26 @@ def GPS_reading_to_degree_format(integer_reading, decimal_reading, direction):
 
 def fetch_current_location(filename):
     """Assuming that the current lat and long data are stored in a file with name filename, return the data as a tuple"""
-    lat = 0
-    lng = 0
-
-    f = open(filename, 'r')
-    data = f.read()
+    
+    match = None
     pattern = "\$GPGGA,[^,]*,([^,]*),([^,]*),([^,]*),([^,]*),"
+    usb = serial.Serial(port='/dev/cu.usbmodem1411', baudrate=4800)
 
-    match = re.search(pattern, data)
+    while (not match):
+        match = re.search(pattern, usb.readline())
+    
     print match.group()
 
-    f.close()
+    lat_reading = match.group(1).split('.')
+    lng_reading = match.group(3).split('.')
+    lat = GPS_reading_to_degree_format(lat_reading[0], lat_reading[1], match.group(2))
+    lng = GPS_reading_to_degree_format(lng_reading[0], lng_reading[1], match.group(4))
+    print (lat, lng)
     return (lat, lng)
 
 
 def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
-
-    start_lat = 43.6626562
-    start_lng = -79.3864334
-    end_lat = 43.6597456
-    end_lng = -79.39520809999999
 
     # do http get request from google maps api
     url = "http://maps.googleapis.com/maps/api/directions/json?origin={},{}&destination={},{}&sensor=false&mode=walking".format(start_lat, start_lng, end_lat, end_lng)
