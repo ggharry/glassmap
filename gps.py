@@ -29,7 +29,7 @@ def fetch_current_location(filename):
     pattern = "\$GPGGA,[^,]*,([^,]*),([^,]*),([^,]*),([^,]*),"
     usb = serial.Serial(port='/dev/cu.usbmodem1411', baudrate=4800)
 
-    while (not match):
+    while (not match or length(match.group(1)) < 6):
         match = re.search(pattern, usb.readline())
     
     print match.group()
