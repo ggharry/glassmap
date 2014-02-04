@@ -58,8 +58,8 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     # find out the immediate location information
     start_location = doc["routes"][0]["legs"][0]["steps"][0]["start_location"]
     end_location = doc["routes"][0]["legs"][0]["steps"][0]["end_location"]
-    print "START: " + start_location
-    print "END: " + end_location
+    print "START: " + str(start_location)
+    print "END: " + str(end_location)
 
     # calculate angle from rise/run information to generate a direction for arrow to point
     # the angle starts from true north, and counter-clockwise
