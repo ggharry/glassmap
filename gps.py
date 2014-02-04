@@ -45,8 +45,10 @@ def fetch_current_location(filename):
 def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
 
+    end_location = "CN%20Tower"
+
     # do http get request from google maps api
-    url = "http://maps.googleapis.com/maps/api/directions/json?origin={},{}&destination={},{}&sensor=false&mode=walking".format(start_lat, start_lng, end_lat, end_lng)
+    url = "http://maps.googleapis.com/maps/api/directions/json?origin={},{}&destination={}&sensor=false&mode=walking".format(start_lat, start_lng, end_location)
 
     # simple parsing json
     response = urllib2.urlopen(url)
