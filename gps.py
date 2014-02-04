@@ -2,7 +2,7 @@ import urllib2
 import json
 import math
 import time
-
+import serial
 
 _CURRENT_LOCATION_FILE = "current_location.txt"
 _DIRECTION_FILE = "directions.txt"
@@ -54,6 +54,9 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     f.write(str(angle_change_from_north))
     f.close()
 
+def read_gps_coordinates():
+    s = serial.Serial(port='/dev/cu.usbmodem1411', baudrate=4800)
+    return s.readline()
 
 def main():
     ctr = 100 # don't want the while loop to continue forever
