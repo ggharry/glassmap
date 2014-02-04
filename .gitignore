@@ -1,5 +1,9 @@
 *~
 glassmap
 .DS_Store
+lng_lat_coordinates.txt
+directions.txt
+current_location.txt
+cv_code
 
 

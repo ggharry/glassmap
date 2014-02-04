@@ -1,6 +1,5 @@
 #include "compass.h"
 
-int READ_COMPASS_INTERVAL = 200;
 
 //callback that will run if the Spatial is attached to the computer
 int CCONV AttachHandler(CPhidgetHandle spatial, void *userptr)
@@ -62,10 +61,9 @@ int CCONV SpatialDataHandler(CPhidgetSpatialHandle spatial, void *userptr, CPhid
 			angles[2] = 360-(angles[2] * -1);
 		}
 
-		printf("Roll: %6f, Pitch: %6f, Yaw: %6f", angles[0], angles[1], angles[2]);
 		
 		// Set the global variable
-		_angle = angles[2];
+		_current_angle = angles[2];
 		
 	}
 

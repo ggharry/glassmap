@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
+#include <string>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -13,6 +15,7 @@
 #include <GL/glut.h>
 #endif
 
+
 using namespace std;
 
 typedef struct {
@@ -21,7 +24,12 @@ typedef struct {
   float z;
 } Coord;
 
-float _angle = 0.0f;
+float _dest_to_current_angle = 0.0f;
+float _current_angle = 0.0f;
+float _destination_angle = 0.0f;
+
+float DISPLAY_INTERVAL = 200;
+int READ_COMPASS_INTERVAL = 200;
 
 float _width = 0.05f;
 float _length = 2.0f;
@@ -38,6 +46,7 @@ void plotPoint(Coord point, Coord offset);
 Coord rotateAlongY(Coord point, float angle);
 void drawScene();
 void update(int value);
+float dest_relative_to_current(float dest, float current);
 int main(int argc, char** argv);
 
 
