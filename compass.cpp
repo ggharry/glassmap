@@ -137,6 +137,9 @@ int spatial_simple()
 		return 0;
 	}
 
+	// calibrate compass
+	setCompassCorrectionParameters(0.44248, 0.00573, 0.18541, 0.23174, 2.12992, 2.16103, 2.48905, -0.03927, -0.03756, -0.03883, 0.00291, -0.04305, 0.00326);
+	
 	//Display the properties of the attached spatial device
 	display_properties((CPhidgetHandle)spatial);
 
