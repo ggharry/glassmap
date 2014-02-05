@@ -78,18 +78,22 @@ void drawScene() {
 	glBegin(GL_TRIANGLES); // Four sides
 	
 	//Triangle
+	glColor4f(0,0,1,1);
 	plotPoint(head, offset);
 	plotPoint(tail1, offset);
 	plotPoint(tail3, offset);
 
+	glColor4f(0,1,0,1);
 	plotPoint(head, offset);
 	plotPoint(tail1, offset);
 	plotPoint(tail2, offset);
 
+	glColor4f(0,1,1,1);
 	plotPoint(head, offset);
 	plotPoint(tail2, offset);
 	plotPoint(tail4, offset);
 
+	glColor4f(1,0,0,1);
 	plotPoint(head, offset);
 	plotPoint(tail3, offset);
 	plotPoint(tail4, offset);  
@@ -97,7 +101,7 @@ void drawScene() {
 	glEnd();
 
    	glBegin(GL_QUADS); // Bottom face
-    
+    	glColor4f(1,0,1,1);
 	plotPoint(tail1, offset);
 	plotPoint(tail2, offset);  
 	plotPoint(tail3, offset);
