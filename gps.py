@@ -7,9 +7,12 @@ import serial
 
 _CURRENT_LOCATION_FILE = "current_location.txt"
 _DIRECTION_FILE = "directions.txt"
+_TRUE_NORTH_FILE = "true_north.txt"
 _PERIOD = 5
 _MIN_IN_DEG = 60.0
 
+prev_lat = 0
+prev_lng = 0
 
 def GPS_reading_to_degree_format(integer_reading, decimal_reading, direction):
     decimal_reading = "." + decimal_reading
@@ -42,7 +45,7 @@ def fetch_current_location(filename):
     return (lat, lng)
 
 
-def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
+def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename1, filename2):
     """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
 
     end_location = "College%20St%20and%20Bay%20St,%20Toronto,%20ON%20M5G"
@@ -73,10 +76,30 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename):
     print "Angle change from North: " + str(angle_change_from_north)
 
     # write information to text file, which can be read by c code
-    f = open(filename, "w")
+    f = open(filename1, "w")
     f.write(str(angle_change_from_north))
     f.close()
 
+    """ Return current angle away from true north """
+    global prev_lat, prev_lng
+
+    rise = start_location["lat"] - prev_lat
+    run = start_location["lng"] - prev_lng
+    current_angle_away_from_north = math.atan2(rise, run)*180/math.pi - 90
+    if current_angle_away_from_north < 0:
+        current_angle_away_from_north += 360
+
+    # print current angle away from north on terminal
+    print "Prev Lat: " + str(prev_lat)
+    print "Prev Lng: " + str(prev_lng)
+    print "Current angle away from North: " + str(current_angle_away_from_north)
+
+    prev_lat = start_location["lat"]
+    prev_lng = start_location["lng"]
+
+    f = open(filename2, "w")
+    f.write(str(current_angle_away_from_north))
+    f.close()
 
 def main():
     # Hard coded final destination - Sanford Fleming Building
@@ -85,7 +108,7 @@ def main():
     ctr = 100 # don't want the while loop to continue forever
     while (ctr > 0):
         (start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
-        fetch_direction(start_lat, start_lng, end_lat, end_lng, _DIRECTION_FILE)
+        fetch_direction(start_lat, start_lng, end_lat, end_lng, _DIRECTION_FILE, _TRUE_NORTH_FILE)
         time.sleep(_PERIOD)
         ctr -= 1
 
