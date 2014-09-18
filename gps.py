@@ -30,7 +30,7 @@ def fetch_current_location(filename):
     
     match = None
     pattern = "\$GPGGA,[^,]*,([^,]*),([^,]*),([^,]*),([^,]*),"
-    usb = serial.Serial(port='/dev/cu.usbmodem1411', baudrate=4800)
+    usb = serial.Serial(port='/dev/cu.usbmodem1421', baudrate=4800)
 
     while (not match or len(match.group(1)) < 6):
         match = re.search(pattern, usb.readline())
@@ -49,6 +49,7 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename1, filename2
     """ Given the start and final coordinates, query Google Maps API and saves the direction into filename."""
 
     end_location = "College%20St%20and%20Bay%20St,%20Toronto,%20ON%20M5G"
+    end_location = "7%20Hart%20House%20Cir,%20Toronto,%20ON%20M5S%203H3"
 
     # do http get request from google maps api
     url = "http://maps.googleapis.com/maps/api/directions/json?origin={},{}&destination={}&sensor=false&mode=walking".format(start_lat, start_lng, end_location)
@@ -89,28 +90,32 @@ def fetch_direction(start_lat, start_lng, end_lat, end_lng, filename1, filename2
     if current_angle_away_from_north < 0:
         current_angle_away_from_north += 360
 
-    # print current angle away from north on terminal
-    print "Prev Lat: " + str(prev_lat)
-    print "Prev Lng: " + str(prev_lng)
-    print "Current angle away from North: " + str(current_angle_away_from_north)
+    # # print current angle away from north on terminal
+    # print "Prev Lat: " + str(prev_lat)
+    # print "Prev Lng: " + str(prev_lng)
+    # print "Current angle away from North: " + str(current_angle_away_from_north)
 
-    prev_lat = start_location["lat"]
-    prev_lng = start_location["lng"]
+    # prev_lat = start_location["lat"]
+    # prev_lng = start_location["lng"]
 
-    f = open(filename2, "w")
-    f.write(str(current_angle_away_from_north))
-    f.close()
+    # f = open(filename2, "w")
+    # f.write(str(current_angle_away_from_north))
+    # f.close()
 
 def main():
     # Hard coded final destination - Sanford Fleming Building
-    end_lat = 43.6597456
-    end_lng = -79.39520809999999
-    ctr = 100 # don't want the while loop to continue forever
+    ctr = 1000 # don't want the while loop to continue forever
     while (ctr > 0):
-        (start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
-        fetch_direction(start_lat, start_lng, end_lat, end_lng, _DIRECTION_FILE, _TRUE_NORTH_FILE)
-        time.sleep(_PERIOD)
-        ctr -= 1
+        try:
+            (start_lat, start_lng) = fetch_current_location(_CURRENT_LOCATION_FILE)
+            fetch_direction(start_lat, start_lng, 0, 0, _DIRECTION_FILE, _TRUE_NORTH_FILE)
+        except Exception, e:
+            pass
+        else:
+            pass
+        finally:
+            time.sleep(_PERIOD)
+            ctr -= 1
 
 
 if __name__ == "__main__":
